@@ -60,6 +60,8 @@
             background: rgba(0, 0, 0, 0.8);
             color: white;
             min-height: 100vh;
+            margin-bottom: 0 !important;
+            padding-bottom: 0 !important;
         }
 
         .movie-card {
@@ -86,6 +88,85 @@
             border: 2px solid white;
             cursor: pointer;
         }
+
+        /* Footer Styling */
+        .footer {
+                    background: #b30000; /* Reddish footer */
+                    color: white;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 10px 20px;
+                    font-size: 14px;
+                }
+        
+                .social-icons {
+                    display: flex;
+                    gap: 15px;
+                }
+        
+                .social-icons a {
+                    color: white;
+                    font-size: 18px;
+                    text-decoration: none;
+                    transition: color 0.3s;
+                }
+        
+                .social-icons a:hover {
+                    color: #ffcc00; /* Light yellow on hover */
+                }
+
+                #popularReviews {
+                    width: 100%;
+                    background: rgba(0, 0, 0, 0.8);
+                    color: white;
+                    padding: 50px 10%;
+                    border-radius: 0;
+                    margin-top: 0 !important;
+                    padding-top: 20px; /* Adjust as needed */
+                }
+            
+                /* Review images */
+                .review-img {
+                    width: 80px;
+                    height: 120px;
+                    border-radius: 5px;
+                    object-fit: cover;
+                }
+            
+                /* Horizontal line separator */
+                .review-divider {
+                    border-top: 1px solid rgba(255, 255, 255, 0.3);
+                }
+
+        /* Genres Section */
+.genres-section {
+    background: rgba(0, 0, 0, 0.8); /* Same as other sections */
+    color: white;
+    padding: 40px 0;
+    margin: 0 !important;
+    width: 100%;
+}
+
+/* Genre Buttons */
+.genre-buttons {
+    margin-top: 20px;
+}
+
+.genre-buttons .btn {
+    margin: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: 2px solid white;
+    transition: all 0.3s;
+}
+
+.genre-buttons .btn:hover {
+    background: white;
+    color: black;
+}
+
+
     </style>
 </head>
 <body>
@@ -159,13 +240,6 @@
             { title: "Pulp Fiction", year: "1994", rating: "8.9", poster: "https://image.tmdb.org/t/p/w500/tbDjFGD6kSiOpR4rT0fXbV7RaYJ.jpg" },
             { title: "Forrest Gump", year: "1994", rating: "8.8", poster: "https://image.tmdb.org/t/p/w500/yE5d3BUhE8hCnkMUJOo1QDoOGNz.jpg" },
             
-            { title: "Gladiator", year: "2000", rating: "8.5", poster: "https://image.tmdb.org/t/p/w500/ty8TGRuvJLPUmAR1H1nRIsgwvim.jpg" },
-            { title: "The Lion King", year: "1994", rating: "8.5", poster: "https://image.tmdb.org/t/p/w500/2lECpi35Hnbpa4y46JX0aY3AWTy.jpg" },
-            { title: "Fight Club", year: "1999", rating: "8.8", poster: "https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg" },
-            { title: "The Lord of the Rings: The Return of the King", year: "2003", rating: "9.0", poster: "https://image.tmdb.org/t/p/w500/rCzpDGLbOoPwLjy3OAm5NUPOTrC.jpg" },
-            
-            { title: "The Shawshank Redemption", year: "1994", rating: "9.3", poster: "https://image.tmdb.org/t/p/w500/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg" },
-            { title: "Django Unchained", year: "2012", rating: "8.4", poster: "https://image.tmdb.org/t/p/w500/7oWY8VDWW7thTzWh3OKYRkWUlD5.jpg" }
         ];
     
         const movieList = document.getElementById("movie-list");
@@ -198,6 +272,105 @@
             displayMovies(searchInput.value);
         });
     </script>
+
+
+    <div id="popularReviews" class="review-content mt-5">
+        <h2 class="text-center mb-4">Popular Reviews This Week</h2>
+        
+        <div class="review-item d-flex align-items-center mb-4">
+            <img src="https://image.tmdb.org/t/p/w200/qmDpIHrmpJINaRKAfWQfftjCdyi.jpg" class="review-img me-3" alt="Inception">
+            <div>
+                <strong>Chris Nolan:</strong> "Inception is a mind-bending masterpiece!"
+            </div>
+        </div>
+        <hr class="review-divider">
+    
+        <div class="review-item d-flex align-items-center mb-4">
+            <img src="https://image.tmdb.org/t/p/w200/qJ2tW6WMUDux911r6m7haRef0WH.jpg" class="review-img me-3" alt="The Dark Knight">
+            <div>
+                <strong>Movie Buff:</strong> "The Dark Knight redefined superhero movies forever!"
+            </div>
+        </div>
+        <hr class="review-divider">
+    
+        <div class="review-item d-flex align-items-center mb-4">
+            <img src="https://image.tmdb.org/t/p/w200/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg" class="review-img me-3" alt="Interstellar">
+            <div>
+                <strong>Cinema Lover:</strong> "Interstellar was an emotional rollercoaster!"
+            </div>
+        </div>
+        <hr class="review-divider">
+    
+        <div class="review-item d-flex align-items-center mb-4">
+            <img src="https://image.tmdb.org/t/p/w200/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg" class="review-img me-3" alt="The Matrix">
+            <div>
+                <strong>Sci-Fi Fan:</strong> "The Matrix is still ahead of its time!"
+            </div>
+        </div>
+    </div>
+    
+
+
+
+<script>
+    // Function to switch between tabs
+    function showTab(tab) {
+        document.getElementById("popularReviews").style.display = (tab === "popular") ? "block" : "none";
+        document.getElementById("userReviews").style.display = (tab === "user") ? "block" : "none";
+        document.getElementById("popular-tab").classList.toggle("active", tab === "popular");
+        document.getElementById("user-tab").classList.toggle("active", tab === "user");
+    }
+
+    // Function to Add a Review
+    function addReview() {
+        const name = document.getElementById("reviewerName").value.trim();
+        const text = document.getElementById("reviewText").value.trim();
+
+        if (name === "" || text === "") {
+            alert("Please fill out both fields before submitting.");
+            return;
+        }
+
+        // Create Review Item
+        const reviewList = document.getElementById("reviewItems");
+        const reviewItem = document.createElement("li");
+        reviewItem.className = "list-group-item";
+        reviewItem.innerHTML = `<strong>${name}:</strong> ${text}`;
+        
+        // Add Review to List
+        reviewList.appendChild(reviewItem);
+
+        // Clear Input Fields
+        document.getElementById("reviewerName").value = "";
+        document.getElementById("reviewText").value = "";
+    }
+</script>
+
+<!-- Genres Section -->
+<div id="genres" class="genres-section">
+    <h2 class="text-center">Genres</h2>
+    <div class="genre-buttons text-center">
+        <button class="btn btn-outline-light">Action</button>
+        <button class="btn btn-outline-light">Comedy</button>
+        <button class="btn btn-outline-light">Drama</button>
+        <button class="btn btn-outline-light">Horror</button>
+        <button class="btn btn-outline-light">Sci-Fi</button>
+        <button class="btn btn-outline-light">Romance</button>
+        <button class="btn btn-outline-light">Thriller</button>
+    </div>
+</div>
+
+
+
+    <div class="footer">
+        <span>&copy; 2025 Movie Tracker | Designed by You</span>
+        <div class="social-icons">
+            <a href="https://www.instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.facebook.com" target="_blank"><i class="fab fa-facebook"></i></a>
+            <a href="https://www.linkedin.com" target="_blank"><i class="fab fa-linkedin"></i></a>
+            <a href="https://www.twitter.com" target="_blank"><i class="fab fa-twitter"></i></a>
+        </div>
+    </div>
     
 
 
