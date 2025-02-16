@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block main_block %}
+<h2>Update Movie</h2>
+
+<form method="POST">
+    {{ form.hidden_tag() }}
+
+    <div class="form-group">
+        {{ form.title.label }}
+        {{ form.title(class="form-control") }}
+    </div>
+
+    <div class="form-group">
+        {{ form.genre.label }}
+        {{ form.genre(class="form-control") }}
+    </div>
+
+    <div class="form-group">
+        {{ form.release_year.label }}
+        {{ form.release_year(class="form-control") }}
+    </div>
+
+    <div class="form-group">
+        {{ form.poster_url.label }}
+        {{ form.poster_url(class="form-control") }}
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update Movie</button>
+</form>
+{% endblock %}
+
+

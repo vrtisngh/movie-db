@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}Reviews - {{ movie.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-light">{{ movie.title }} - User Reviews</h2>
+
+    <!-- Sorting Options -->
+    <div class="mb-3">
+        <label class="text-light">Sort by:</label>
+        <select id="sort-reviews" class="form-control bg-dark text-white" onchange="sortReviews()">
+            <option value="latest" {% if sort_by == 'latest' %}selected{% endif %}>Latest</option>
+            <option value="highest" {% if sort_by == 'highest' %}selected{% endif %}>Highest Rated</option>
+            <option value="lowest" {% if sort_by == 'lowest' %}selected{% endif %}>Lowest Rated</option>
+        </select>
+    </div>
+
+    <!-- Review Form (Only for Logged-in Users) -->
+    {% if current_user.is_authenticated %}
+    <div class="card bg-dark text-white p-3 mb-4">
+        <h5>Add Your Review</h5>
+        <form method="POST" action="{{ url_for('add_review', movie_id=movie.id) }}">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                <label for="rating">Rating (1-10)</label>
+                {{ form.rating(class="form-control", min="1", max="10") }}
+            </div>
+            <div class="form-group">
+                <label for="review_text">Your Review</label>
+                {{ form.review_text(class="form-control", rows="3") }}
+            </div>
+            <button type="submit" class="btn btn-warning mt-2">Submit Review</button>
+        </form>
+    </div>
+    {% else %}
+    <p class="text-warning">Log in to write a review.</p>
+    {% endif %}
+
+    <!-- Display All Reviews -->
+    {% if movie.reviews %}
+        {% for review in movie.reviews %}
+            <div class="review-card">
+                <div class="review-header">
+                    <img src="{{ url_for('static', filename='images/default_user.png') }}" alt="User Avatar" class="user-avatar">
+                    <div class="review-meta">
+                        <strong>{{ review.user.username }}</strong> 
+                        <span class="review-timestamp">{{ review.timestamp.strftime('%B %d, %Y') }}</span>
+                    </div>
+                    <div class="review-rating">
+                        {% for i in range(review.rating) %} ⭐ {% endfor %}
+                        ({{ review.rating }}/10)
+                    </div>
+                </div>
+
+                <div class="review-body">
+                    <p>{{ review.review_text }}</p>
+                </div>
+
+                <!-- Like & Dislike Buttons -->
+                <div class="review-actions">
+                    <button class="btn btn-success btn-sm like-btn" data-review-id="{{ review.id }}">
+                        👍 <span class="like-count">{{ review.likes }}</span>
+                    </button>
+                    <button class="btn btn-danger btn-sm dislike-btn" data-review-id="{{ review.id }}">
+                        👎 <span class="dislike-count">{{ review.dislikes }}</span>
+                    </button>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="text-light">No reviews yet. Be the first to review!</p>
+    {% endif %}
+
+    <!-- Pagination -->
+    <nav>
+        <ul class="pagination">
+            {% if reviews.has_prev %}
+                <li class="page-item">
+                    <a class="page-link bg-dark text-white" href="{{ url_for('reviews', movie_id=movie.id, page=reviews.prev_num, sort_by=sort_by) }}">Previous</a>
+                </li>
+            {% endif %}
+            {% for page_num in reviews.iter_pages() %}
+                {% if page_num %}
+                    <li class="page-item {% if page_num == reviews.page %}active{% endif %}">
+                        <a class="page-link bg-dark text-white" href="{{ url_for('reviews', movie_id=movie.id, page=page_num, sort_by=sort_by) }}">{{ page_num }}</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                {% endif %}
+            {% endfor %}
+            {% if reviews.has_next %}
+                <li class="page-item">
+                    <a class="page-link bg-dark text-white" href="{{ url_for('reviews', movie_id=movie.id, page=reviews.next_num, sort_by=sort_by) }}">Next</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+
+<!-- JavaScript for Sorting and Like/Dislike -->
+<script>
+    function sortReviews() {
+        let sortValue = document.getElementById('sort-reviews').value;
+        window.location.href = "{{ url_for('reviews', movie_id=movie.id) }}?sort_by=" + sortValue;
+    }
+
+    document.querySelectorAll('.like-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            let reviewId = this.dataset.reviewId;
+            fetch(`/like_review/${reviewId}`, { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    this.querySelector('.like-count').textContent = data.likes;
+                });
+        });
+    });
+
+    document.querySelectorAll('.dislike-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            let reviewId = this.dataset.reviewId;
+            fetch(`/dislike_review/${reviewId}`, { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    this.querySelector('.dislike-count').textContent = data.dislikes;
+                });
+        });
+    });
+</script>
+{% endblock %}

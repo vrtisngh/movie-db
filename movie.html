@@ -1,0 +1,234 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ movie.title }}{% endblock %}
+
+{% block styles %}
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+    body {
+        background: linear-gradient(to right, #0F2027, #203A43, #2C5364);
+        color: white;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .movie-container {
+        max-width: 900px;
+        margin: 50px auto;
+        padding: 30px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(15px);
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        text-align: center;
+        animation: fadeIn 1s ease-in-out;
+    }
+
+    .movie-poster img {
+        width: 100%;
+        max-width: 280px;
+        border-radius: 15px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0px 8px 20px rgba(255, 255, 255, 0.2);
+    }
+
+    .movie-title {
+        font-size: 2.5rem;
+        margin-top: 15px;
+        font-weight: bold;
+    }
+
+    .movie-info {
+        font-size: 1.1rem;
+        margin: 10px 0;
+        opacity: 0.9;
+    }
+
+    .movie-details {
+        text-align: left;
+        margin-top: 20px;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+    }
+
+    .stream-button {
+        display: inline-block;
+        padding: 12px 20px;
+        margin-top: 10px;
+        background: linear-gradient(135deg, #ff7b00, #ffbb33);
+        color: white;
+        font-weight: bold;
+        text-decoration: none;
+        border-radius: 8px;
+        transition: background 0.3s ease-in-out;
+    }
+
+    .stream-button:hover {
+        background: linear-gradient(135deg, #ffbb33, #ff7b00);
+    }
+
+    /* Star Rating */
+    .star-rating {
+        font-size: 2rem;
+        cursor: pointer;
+        color: gray;
+        display: flex;
+        justify-content: center;
+        gap: 5px;
+        margin-top: 15px;
+    }
+
+    .star {
+        transition: color 0.3s ease, transform 0.3s ease;
+    }
+
+    .star:hover, .star.selected {
+        color: gold;
+        transform: scale(1.2);
+    }
+
+    /* Reviews Section */
+    .reviews-section {
+        margin-top: 40px;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1);
+    }
+
+    .review-form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .review-form input, .review-form textarea {
+        width: 100%;
+        padding: 10px;
+        border-radius: 5px;
+        border: none;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        outline: none;
+    }
+
+    .review-form button {
+        padding: 10px;
+        background: linear-gradient(135deg, #4CAF50, #388E3C);
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        font-size: 1rem;
+        font-weight: bold;
+    }
+
+    .review-form button:hover {
+        background: linear-gradient(135deg, #388E3C, #2E7D32);
+    }
+
+    .review-item {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        transition: transform 0.3s ease;
+    }
+
+    .review-item:hover {
+        transform: scale(1.02);
+    }
+</style>
+{% endblock %}
+
+{% block main_block %}
+<div class="movie-container">
+    <div class="movie-poster">
+        <img src="{{ movie.poster_url if movie.poster_url else 'https://via.placeholder.com/300x450' }}" alt="{{ movie.title }}">
+    </div>
+
+    <h1 class="movie-title">{{ movie.title }}</h1>
+    <p class="movie-info"><strong>Genre:</strong> {{ movie.genre }}</p>
+    <p class="movie-info"><strong>Release Year:</strong> {{ movie.release_year }}</p>
+
+    <div class="movie-details">
+        <h3>Plot</h3>
+        <p>{{ movie.plot if movie.plot else "No plot available." }}</p>
+
+        <h3>Watch Now</h3>
+        {% if movie.streaming_link %}
+            <a href="{{ movie.streaming_link }}" target="_blank" class="stream-button">Stream Here</a>
+        {% else %}
+            <p>No streaming link available.</p>
+        {% endif %}
+    </div>
+
+    <!-- Rating Section -->
+    <h3>Average Rating: <span id="avg-rating">{{ avg_rating }}</span> ⭐</h3>
+    <h4>Rate this movie</h4>
+    <div class="star-rating">
+        {% for i in range(1, 6) %}
+            <span class="star" data-value="{{ i }}">★</span>
+        {% endfor %}
+    </div>
+
+    <!-- Review Section -->
+    <div class="reviews-section">
+        <h3>Reviews</h3>
+
+        <!-- Review Form -->
+        <form class="review-form" id="review-form">
+            {% if not current_user.is_authenticated %}
+                <input type="text" id="guest-username" placeholder="Enter your name" required>
+            {% endif %}
+            <textarea id="review-content" placeholder="Write a review..." required></textarea>
+            <button type="submit">Submit Review</button>
+        </form>
+
+        <ul class="list-group" id="review-list">
+            {% for review in reviews %}
+                <li class="review-item"><strong>{{ review.username }}</strong>: {{ review.content }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Star rating
+        document.querySelectorAll('.star').forEach(star => {
+            star.addEventListener('click', function () {
+                let rating = this.getAttribute('data-value');
+                let movieId = "{{ movie.id }}";
+                let usernameField = document.getElementById('guest-username');
+                let username = usernameField ? usernameField.value : null;
+
+                fetch(`/rate_movie/${movieId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ rating: rating, username: username })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('avg-rating').innerText = data.avg_rating;
+                    document.querySelectorAll('.star').forEach(s => s.classList.remove('selected'));
+                    document.querySelector(`.star[data-value="${rating}"]`).classList.add('selected');
+                });
+            });
+        });
+    });
+    document.getElementById('review-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        let username = document.getElementById('guest-username') ? document.getElementById('guest-username').value : 'Anonymous';
+        let content = document.getElementById('review-content').value;
+        let reviewList = document.getElementById('review-list');
+        let newReview = document.createElement('li');
+        newReview.classList.add('review-item');
+        newReview.innerHTML = `<strong>${username}</strong>: ${content}`;
+        reviewList.appendChild(newReview);
+        document.getElementById('review-form').reset();
+    });
+</script>
+{% endblock %}

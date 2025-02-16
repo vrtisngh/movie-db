@@ -1,384 +1,250 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Movie Database</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-    <style>
-        /* Full-page background image */
-        .hero-section {
-            position: relative;
-            width: 100%;
-            height: 100vh; /* Full viewport height */
-            background: url('images/pic5.jpeg') no-repeat center center;
-            background-size: cover;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            color: white;
-            padding-bottom:50px;
+{% extends 'base.html' %}
 
-        }
+{% block title %}Home Page{% endblock %}
 
-        .hero-text {
-            position: relative;
-            z-index: 1;
-            max-width: 800px;
-            margin-top: 400px; /* Adjust to move lower */
-        }
-        
+{% block styles %}
+<style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow-x: hidden; /* Prevent horizontal scrolling */
+        font-family: 'Arial', sans-serif;
+    }
 
-        img {
-            image-rendering: crisp-edges;
-            image-rendering: -webkit-optimize-contrast;
-            max-width: 100%;
-            height: auto;
-        }
-
-
-        /* Transparent Navbar */
-        .navbar {
-            background: transparent !important;
-            position: absolute;
-            width: 100%;
-            z-index: 1000;
-        }
-
-        /* White text for navbar */
-        .navbar-brand strong, 
-        .nav-link, 
-        .btn {
-            color: white !important;
-        }
-
-        /* Movie section starts AFTER the full-page image */
-        .movie-section {
-            padding: 60px 0;
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            min-height: 100vh;
-            margin-bottom: 0 !important;
-            padding-bottom: 0 !important;
-        }
-
-        .movie-card {
-            background: #333;
-            border-radius: 10px;
-            padding: 15px;
-            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
-            transition: 0.3s;
-        }
-
-        .movie-card:hover {
-            transform: scale(1.05);
-        }
-
-        .logo {
-            height: 40px;
-        }
-
-        .profile-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid white;
-            cursor: pointer;
-        }
-
-        /* Footer Styling */
-        .footer {
-                    background: #b30000; /* Reddish footer */
-                    color: white;
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    padding: 10px 20px;
-                    font-size: 14px;
-                }
-        
-                .social-icons {
-                    display: flex;
-                    gap: 15px;
-                }
-        
-                .social-icons a {
-                    color: white;
-                    font-size: 18px;
-                    text-decoration: none;
-                    transition: color 0.3s;
-                }
-        
-                .social-icons a:hover {
-                    color: #ffcc00; /* Light yellow on hover */
-                }
-
-                #popularReviews {
-                    width: 100%;
-                    background: rgba(0, 0, 0, 0.8);
-                    color: white;
-                    padding: 50px 10%;
-                    border-radius: 0;
-                    margin-top: 0 !important;
-                    padding-top: 20px; /* Adjust as needed */
-                }
-            
-                /* Review images */
-                .review-img {
-                    width: 80px;
-                    height: 120px;
-                    border-radius: 5px;
-                    object-fit: cover;
-                }
-            
-                /* Horizontal line separator */
-                .review-divider {
-                    border-top: 1px solid rgba(255, 255, 255, 0.3);
-                }
-
-        /* Genres Section */
-.genres-section {
-    background: rgba(0, 0, 0, 0.8); /* Same as other sections */
+    /* Full-page background image */
+    .hero-section {
+    position: relative;
+    width: 100vw; /* Full width */
+    height: 100vh; /* Full height */
+    background: url('/static/images/pic5.jpeg') no-repeat center left fixed; 
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
     color: white;
-    padding: 40px 0;
-    margin: 0 !important;
-    width: 100%;
-}
-
-/* Genre Buttons */
-.genre-buttons {
-    margin-top: 20px;
-}
-
-.genre-buttons .btn {
-    margin: 5px;
-    padding: 10px 20px;
-    font-size: 16px;
-    border: 2px solid white;
-    transition: all 0.3s;
-}
-
-.genre-buttons .btn:hover {
-    background: white;
-    color: black;
-}
-
-
-    </style>
-</head>
-<body>
-
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-        <div class="container">
-            <!-- Logo & Website Name -->
-            <a class="navbar-brand d-flex align-items-center" href="#">
-                <img src="https://via.placeholder.com/40" class="logo me-2" alt="Logo"> 
-                <strong>___</strong>
-            </a>
-
-            <!-- Mobile Menu Button -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <!-- Navbar Content -->
-            <div class="collapse navbar-collapse justify-content-between" id="navbarContent">
-                <!-- Search Bar -->
-                <div class="d-flex ms-auto me-3">
-                    <input type="text" id="search" class="form-control me-2" placeholder="Search movies...">
-                </div>
-
-                <!-- Login, Signup & Profile -->
-                <div class="d-flex align-items-center">
-                    <a href="#" class="btn btn-outline-light me-2">Login</a>
-                    <a href="#" class="btn btn-primary me-3">Sign Up</a>
-                    <img src="https://i.pinimg.com/736x/23/af/83/23af83af7b447965db11d56a3f80c095.jpg" class="profile-icon" alt="User">
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Full-Page Background Image -->
-    <section class="hero-section">
-        <div class="hero-text">
-            <h1>Welcome to ___</h1>
-            <p>Discover the best movies, ratings, and reviews.</p>
-            <a href="#" class="btn btn-primary">Browse Now</a>
-        </div>
-    </section>
-
-
-    <!-- Movie Section -->
-    <div class="movie-section">
-        <div class="container mt-4">
-            <h2 class="text-center mb-4">Popular Movies</h2>
-            <div class="row" id="movie-list">
-                <!-- Movies will be inserted here via JavaScript -->
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Extended Movie Data
-        const movies = [
-            { title: "Inception", year: "2010", rating: "8.8", poster: "https://image.tmdb.org/t/p/w500/qmDpIHrmpJINaRKAfWQfftjCdyi.jpg" },
-            { title: "The Dark Knight", year: "2008", rating: "9.0", poster: "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg" },
-            { title: "Interstellar", year: "2014", rating: "8.6", poster: "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg" },
-            { title: "Parasite", year: "2019", rating: "8.6", poster: "https://image.tmdb.org/t/p/w500/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg" },
-            
-            { title: "Avengers: Endgame", year: "2019", rating: "8.4", poster: "https://image.tmdb.org/t/p/w500/or06FN3Dka5tukK1e9sl16pB3iy.jpg" },
-            { title: "Joker", year: "2019", rating: "8.4", poster: "https://image.tmdb.org/t/p/w500/udDclJoHjfjb8Ekgsd4FDteOkCU.jpg" },
-            { title: "Titanic", year: "1997", rating: "7.8", poster: "https://image.tmdb.org/t/p/w500/kHXEpyfl6zqn8a6YuozZUujufXf.jpg" },
-            { title: "The Matrix", year: "1999", rating: "8.7", poster: "https://image.tmdb.org/t/p/w500/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg" },
-            
-            { title: "Shutter Island", year: "2010", rating: "8.2", poster: "https://image.tmdb.org/t/p/w500/kve20tXwUZpu4GUX8l6X7Z4jmL6.jpg" },
-            { title: "The Godfather", year: "1972", rating: "9.2", poster: "https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsRolD1fZdja1.jpg" },
-            { title: "Pulp Fiction", year: "1994", rating: "8.9", poster: "https://image.tmdb.org/t/p/w500/tbDjFGD6kSiOpR4rT0fXbV7RaYJ.jpg" },
-            { title: "Forrest Gump", year: "1994", rating: "8.8", poster: "https://image.tmdb.org/t/p/w500/yE5d3BUhE8hCnkMUJOo1QDoOGNz.jpg" },
-            
-        ];
-    
-        const movieList = document.getElementById("movie-list");
-        const searchInput = document.getElementById("search");
-    
-        // Function to Display Movies
-        function displayMovies(filter = "") {
-            movieList.innerHTML = "";  
-    
-            movies
-                .filter(movie => movie.title.toLowerCase().includes(filter.toLowerCase())) 
-                .forEach(movie => {
-                    movieList.innerHTML += `
-                        <div class="col-md-3 mb-4">
-                            <div class="movie-card">
-                                <img src="${movie.poster}" class="img-fluid rounded">
-                                <h5 class="mt-2">${movie.title} (${movie.year})</h5>
-                                <p>⭐ ${movie.rating}</p>
-                            </div>
-                        </div>
-                    `;
-                });
-        }
-    
-        // Initial Display
-        displayMovies();
-    
-        // Search Functionality
-        searchInput.addEventListener("keyup", () => {
-            displayMovies(searchInput.value);
-        });
-    </script>
-
-
-    <div id="popularReviews" class="review-content mt-5">
-        <h2 class="text-center mb-4">Popular Reviews This Week</h2>
-        
-        <div class="review-item d-flex align-items-center mb-4">
-            <img src="https://image.tmdb.org/t/p/w200/qmDpIHrmpJINaRKAfWQfftjCdyi.jpg" class="review-img me-3" alt="Inception">
-            <div>
-                <strong>Chris Nolan:</strong> "Inception is a mind-bending masterpiece!"
-            </div>
-        </div>
-        <hr class="review-divider">
-    
-        <div class="review-item d-flex align-items-center mb-4">
-            <img src="https://image.tmdb.org/t/p/w200/qJ2tW6WMUDux911r6m7haRef0WH.jpg" class="review-img me-3" alt="The Dark Knight">
-            <div>
-                <strong>Movie Buff:</strong> "The Dark Knight redefined superhero movies forever!"
-            </div>
-        </div>
-        <hr class="review-divider">
-    
-        <div class="review-item d-flex align-items-center mb-4">
-            <img src="https://image.tmdb.org/t/p/w200/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg" class="review-img me-3" alt="Interstellar">
-            <div>
-                <strong>Cinema Lover:</strong> "Interstellar was an emotional rollercoaster!"
-            </div>
-        </div>
-        <hr class="review-divider">
-    
-        <div class="review-item d-flex align-items-center mb-4">
-            <img src="https://image.tmdb.org/t/p/w200/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg" class="review-img me-3" alt="The Matrix">
-            <div>
-                <strong>Sci-Fi Fan:</strong> "The Matrix is still ahead of its time!"
-            </div>
-        </div>
-    </div>
-    
-
-
-
-<script>
-    // Function to switch between tabs
-    function showTab(tab) {
-        document.getElementById("popularReviews").style.display = (tab === "popular") ? "block" : "none";
-        document.getElementById("userReviews").style.display = (tab === "user") ? "block" : "none";
-        document.getElementById("popular-tab").classList.toggle("active", tab === "popular");
-        document.getElementById("user-tab").classList.toggle("active", tab === "user");
     }
 
-    // Function to Add a Review
-    function addReview() {
-        const name = document.getElementById("reviewerName").value.trim();
-        const text = document.getElementById("reviewText").value.trim();
 
-        if (name === "" || text === "") {
-            alert("Please fill out both fields before submitting.");
-            return;
-        }
+/* Centering text properly */
+.hero-text {
+    position: absolute;
+    z-index: 1;
+    max-width: 800px;
+    text-align: center;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+}
 
-        // Create Review Item
-        const reviewList = document.getElementById("reviewItems");
-        const reviewItem = document.createElement("li");
-        reviewItem.className = "list-group-item";
-        reviewItem.innerHTML = `<strong>${name}:</strong> ${text}`;
-        
-        // Add Review to List
-        reviewList.appendChild(reviewItem);
 
-        // Clear Input Fields
-        document.getElementById("reviewerName").value = "";
-        document.getElementById("reviewText").value = "";
+    /* Transparent Navbar */
+    .navbar {
+        background: rgba(0, 0, 0, 0.7) !important; /* Slight transparency */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+        transition: background 0.3s ease-in-out;
+        padding: 10px 20px;
     }
-</script>
 
-<!-- Genres Section -->
-<div id="genres" class="genres-section">
-    <h2 class="text-center">Genres</h2>
-    <div class="genre-buttons text-center">
-        <button class="btn btn-outline-light">Action</button>
-        <button class="btn btn-outline-light">Comedy</button>
-        <button class="btn btn-outline-light">Drama</button>
-        <button class="btn btn-outline-light">Horror</button>
-        <button class="btn btn-outline-light">Sci-Fi</button>
-        <button class="btn btn-outline-light">Romance</button>
-        <button class="btn btn-outline-light">Thriller</button>
+    .navbar.scrolled {
+        background: rgba(0, 0, 0, 0.9) !important;
+    }
+
+    .navbar-brand strong, 
+    .nav-link, 
+    .btn {
+        color: white !important;
+    }
+
+    /* Navbar Content Alignment */
+    .navbar .container-fluid {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    /* Shifted Search Bar to Right */
+    .search-box {
+        flex-grow: 1;
+        max-width: 350px;
+        margin-left: 20px; /* Adjusted margin for balance */
+    }
+
+    .search-box input {
+        width: 100%;
+        padding: 8px 12px;
+        border-radius: 20px;
+        border: none;
+        outline: none;
+    }
+
+    /* Movie section */
+    .movie-section {
+        padding: 60px 0;
+        background: rgba(0, 0, 0, 0.85);
+        color: white;
+        min-height: 100vh;
+    }
+
+    .movie-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+        align-items: flex-start;
+        max-width: 1200px;
+        margin: auto;
+        padding: 20px;
+    }
+
+    .movie-card {
+        background: #222;
+        width: 200px;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.15);
+        text-align: center;
+        padding-bottom: 10px;
+        transition: transform 0.2s;
+    }
+
+    .movie-card:hover {
+        transform: scale(1.05);
+    }
+
+    .movie-card img {
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+    }
+
+    .movie-title {
+        font-size: 1.2rem;
+        color: white;
+        text-decoration: none;
+        display: block;
+        margin: 10px 0;
+    }
+
+    .movie-title:hover {
+        color: #ffcc00;
+    }
+
+    .favorite-btn {
+        background: #ffcc00;
+        color: black;
+        border: none;
+        padding: 8px;
+        width: 90%;
+        margin: 10px auto;
+        display: block;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    .favorite-btn:hover {
+        background: #e6b800;
+    }
+
+    .logo {
+        height: 40px;
+    }
+
+    .profile-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid white;
+        cursor: pointer;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+        .navbar .search-box {
+            max-width: 250px;
+            margin-left: 10px;
+        }
+        
+        .hero-text {
+            margin-top: 300px;
+            text-align: center;
+        }
+        
+        .movie-grid {
+            flex-direction: column;
+            align-items: center;
+        }
+    }
+
+</style>
+{% endblock %}
+
+{% block main_block %}
+
+<!-- Full-Page Background Image -->
+<section class="hero-section">
+    <div class="hero-text">
+        <h1>Welcome to Movie Database</h1>
+        <p>Discover the best movies, ratings, and reviews.</p>
+        <a href="#movies" class="btn btn-primary">Browse Now</a>
+    </div>
+</section>
+
+<!-- Movie Section -->
+<div class="movie-section" id="movies">
+    <div class="container">
+        <h2 class="text-center mb-4">Popular Movies</h2>
+        <div class="movie-grid">
+            {% for movie in movies %}
+                <div class="movie-card">
+                    <a href="{{ url_for('movie_detail', movie_id=movie.id) }}">
+                        <img src="{{ movie.poster_url if movie.poster_url else 'https://via.placeholder.com/200x300' }}" 
+                             alt="{{ movie.title }}">
+                    </a>
+                    <a href="{{ url_for('movie_detail', movie_id=movie.id) }}" class="movie-title">
+                        <h3>{{ movie.title }}</h3>
+                    </a>
+                    <p>Genre: {{ movie.genre }}</p>
+                    <p>Year: {{ movie.release_year }}</p>
+                    {% if current_user.is_authenticated %}
+                    <form action="{{ url_for('add_favorite', movie_id=movie.id) }}" method="post">
+                        <button type="submit" class="favorite-btn">Add to Favorites ⭐</button>
+                    </form>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
     </div>
 </div>
+{% endblock %}
 
+{% block scripts %}
+<script>
+    // Navbar background change on scroll
+    window.addEventListener("scroll", function () {
+        const navbar = document.querySelector(".navbar");
+        if (window.scrollY > 50) {
+            navbar.classList.add("scrolled");
+        } else {
+            navbar.classList.remove("scrolled");
+        }
+    });
 
-
-    <div class="footer">
-        <span>&copy; 2025 Movie Tracker | Designed by You</span>
-        <div class="social-icons">
-            <a href="https://www.instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
-            <a href="https://www.facebook.com" target="_blank"><i class="fab fa-facebook"></i></a>
-            <a href="https://www.linkedin.com" target="_blank"><i class="fab fa-linkedin"></i></a>
-            <a href="https://www.twitter.com" target="_blank"><i class="fab fa-twitter"></i></a>
-        </div>
-    </div>
-    
-
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
-
-
-
-
-    
+    // Movie search
+    const searchInput = document.getElementById("search");
+    searchInput.addEventListener("keyup", () => {
+        const filter = searchInput.value.toLowerCase();
+        document.querySelectorAll(".movie-card").forEach(card => {
+            const title = card.querySelector(".movie-title").innerText.toLowerCase();
+            card.style.display = title.includes(filter) ? "block" : "none";
+        });
+    });
+</script>
+{% endblock %}
