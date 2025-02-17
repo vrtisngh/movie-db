@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title_block %}Add Movie{% endblock %}
+
+{% block main_block %}
+<div class="container">
+    <h2 class="text-center">Add a New Movie</h2>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.title.label }} {{ form.title(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.genre.label }} {{ form.genre(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.release_year.label }} {{ form.release_year(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.poster_url.label }} {{ form.poster_url(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.plot.label }} {{ form.plot(class="form-control", rows="3") }}
+        </div>
+        <div class="form-group">
+            {{ form.streaming_link.label }} {{ form.streaming_link(class="form-control") }}
+        </div>
+        <div class="text-center mt-3">
+            {{ form.submit(class="btn btn-success") }}
+        </div>
+    </form>
+</div>
+{% endblock %}

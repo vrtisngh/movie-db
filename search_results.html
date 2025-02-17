@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block main_block %}
+    <h2>Search Results for "{{ query }}"</h2>
+    <div class="movie-list">
+        {% if movies %}
+            {% for movie in movies %}
+                <div class="movie-card">
+                    <h3>{{ movie.title }}</h3>
+                    <p>Genre: {{ movie.genre }}</p>
+                    <p>Year: {{ movie.release_year }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No results found.</p>
+        {% endif %}
+    </div>
+{% endblock %}
