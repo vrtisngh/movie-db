@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+
+{% block title_block %}Dashboard{% endblock %}
+
+{% block styles %}
+<style>
+    .movie-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .movie-card {
+        background: #1e1e1e;
+        width: 220px;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1);
+        text-align: center;
+        padding-bottom: 10px;
+        transition: transform 0.2s;
+    }
+
+    .movie-card:hover {
+        transform: scale(1.05);
+    }
+
+    .movie-card img {
+        width: 100%;
+        height: 320px;
+        object-fit: cover;
+    }
+
+    .movie-info {
+        padding: 10px;
+        color: white;
+    }
+
+    .btn-container {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        padding: 10px;
+    }
+
+    .btn {
+        border: none;
+        padding: 8px;
+        width: 100%;
+        border-radius: 5px;
+        font-size: 14px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background 0.2s;
+    }
+
+    .details-btn {
+        background: #ffcc00;
+        color: black;
+    }
+
+    .details-btn:hover {
+        background: #e6b800;
+    }
+
+    .remove-btn {
+        background: #ff4c4c;
+        color: white;
+    }
+
+    .remove-btn:hover {
+        background: #d43f3f;
+    }
+
+    .admin-btn {
+        background: #007bff;
+        color: white;
+    }
+
+    .admin-btn:hover {
+        background: #0056b3;
+    }
+
+    .admin-section {
+        margin: 30px 0;
+        text-align: center;
+    }
+</style>
+{% endblock %}
+
+{% block navbar %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">MovieDB</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a></li>
+            {% if current_user.role == 'admin' %}
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('manage_users') }}">Manage Users</a></li>
+            {% endif %}
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
+        </ul>
+    </div>
+</nav>
+{% endblock %}
+
+{% block main_block %}
+<div class="container text-center mt-4">
+    <h2>Welcome, {{ current_user.name }}!</h2>
+    <p>Your role: <strong>{{ current_user.role }}</strong></p>
+    <hr>
+    <a href="{{ url_for('profile') }}" class="btn btn-primary">View Profile</a>
+</div>
+
+<hr>
+
+<div class="container">
+    <h2 class="text-center">Your Favorite Movies 🎬</h2>
+
+    {% if favorite_movies %}
+    <div class="movie-grid">
+        {% for fav in favorite_movies %}
+            <div class="movie-card">
+                <img src="{{ fav.movie.poster_url }}" alt="{{ fav.movie.title }}">
+                <div class="movie-info">
+                    <h4>{{ fav.movie.title }}</h4>
+                    <p>Genre: {{ fav.movie.genre }}</p>
+                    <p>Year: {{ fav.movie.release_year }}</p>
+                </div>
+                <div class="btn-container">
+                    <a href="{{ url_for('movie_detail', movie_id=fav.movie.id) }}" class="btn details-btn">View Details 🎬</a>
+                    <form action="{{ url_for('remove_favorite', movie_id=fav.movie.id) }}" method="post">
+                        <button type="submit" class="btn remove-btn" onclick="return confirm('Are you sure?')">Remove ❌</button>
+                    </form>
+                    {% if current_user.role == 'admin' %}
+                        <a href="{{ url_for('update_movie', movie_id=fav.movie.id) }}" class="btn btn-warning">✏️ Update</a>
+                        <form action="{{ url_for('delete_movie', movie_id=fav.movie.id) }}" method="post" onsubmit="return confirm('Are you sure?');">
+                            <button type="submit" class="btn btn-danger">🗑️ Delete</button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    {% else %}
+        <p class="text-center text-muted">You haven't added any favorite movies yet. Start adding some now! 🍿</p>
+    {% endif %}
+</div>
+{% endblock %}
